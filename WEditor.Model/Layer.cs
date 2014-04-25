@@ -14,11 +14,10 @@ namespace Models
 
         public Layer()
         {
-            Name = "DefaultLayer";
+            Name = "New Layer";
             Objects = new ObservableCollection<ObjectIntance>();
             Visible = true;
             DefaultStyle = new EditorInfo();
-            Order = 0;
         }
 
         #endregion
@@ -30,9 +29,6 @@ namespace Models
 
         [PropertyOrder(1)]
         public ObservableCollection<ObjectIntance> Objects { get; set; }
-
-        [PropertyOrder(2)]
-        public int Order { get; set; }
 
         [PropertyOrder(3)]
         public bool Visible { get; set; }

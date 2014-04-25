@@ -88,6 +88,17 @@
                                                         <Image Source="/Resources/NewDocumentHS.png" Height="16" Width="16" />
                                                     </MenuItem.Icon>
                                                 </MenuItem>
+                                                <MenuItem Header="Move Layer Up" cal:Message.Attach="OnMoveLayer($dataContext,true)">
+                                                    <MenuItem.Icon>
+                                                        <Image Source="/Resources/FillUpHS.png" Height="16" Width="16" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Move Layer Down" cal:Message.Attach="OnMoveLayer($dataContext,false)">
+                                                    <MenuItem.Icon>
+                                                        <Image Source="/Resources/FillDownHS.png" Height="16" Width="16" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator />
                                                 <MenuItem Header="Delete" cal:Message.Attach="OnDeleteLayer($dataContext)">
                                                     <MenuItem.Icon>
                                                         <Image Source="/Resources/DeleteHS.png" Height="16" Width="16" />

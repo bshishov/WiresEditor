@@ -126,7 +126,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             var world = item as World;
             if (world == null)
                 return;
-            world.Layers.Add(new Layer());
+            world.Layers.Insert(0,new Layer());
         }
 
         public void OnDeleteWorld(object item)
@@ -205,6 +205,21 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             if (layer == null)
                 return;
             layer.Objects.Add(ObjectIntance.CreateEditorDefault(layer.DefaultStyle));
+        }
+
+        public void OnMoveLayer(object item, bool up)
+        {
+            var layer = item as Layer;
+            if (layer == null) return;
+            var world = GetParentFor(layer, Projects.First());
+            if (world == null) return;
+            var index = world.Layers.IndexOf(layer);
+            index += up ? -1 : +1;
+            index = Math.Max(0, index);
+            index = Math.Min(0, world.Layers.Count - 1);
+            
+            world.Layers.Remove(layer);
+            world.Layers.Insert(index, layer);
         } 
         #endregion
 

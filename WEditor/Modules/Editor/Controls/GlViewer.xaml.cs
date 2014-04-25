@@ -94,7 +94,7 @@ namespace WEditor.Modules.Editor.Controls
 
         #region Fields
 
-        private readonly Color _selectionColor = Colors.Lime;
+        private readonly Color _selectionColor = Colors.LimeGreen;
         private readonly Dictionary<string, TextureInfo> _textures = new Dictionary<string, TextureInfo>();
 
         private Camera _camera;
@@ -106,7 +106,7 @@ namespace WEditor.Modules.Editor.Controls
         private PointF _lastPanningPos;
         private bool _panning;
 
-        private float _scalerSize = 10;
+        private float ScalerSize { get { return 5/_camera.Zoom; } }
         private bool _scaling;
 
         #endregion
@@ -193,11 +193,10 @@ namespace WEditor.Modules.Editor.Controls
         {
             if (World == null)
                 return;
-            var layers = World.Layers.OrderBy(l => l.Order).Where(l => l.Visible);
             GL.LineWidth(2f);
-            foreach (var layer in layers)
+            foreach (var layer in World.Layers.Where(l=>l.Visible).Reverse())
             {
-                foreach (var obj in layer.Objects)
+                foreach (var obj in layer.Objects.Reverse())
                 {
                     var transform = obj.GetComponent<Transform>();
                     var ed = obj.GetComponent<EditorInfo>();
@@ -205,6 +204,7 @@ namespace WEditor.Modules.Editor.Controls
                     if (transform != null && ed != null && ed.Visible)
                     {
                         var rectcolor = obj == SelectedObject ? _selectionColor : ed.ObjectColor;
+                        var texColor = obj == SelectedObject ? _selectionColor : Colors.White;
                         var top = transform.Y;
                         var left = transform.X;
                         var right = transform.X + ed.Width;
@@ -233,7 +233,7 @@ namespace WEditor.Modules.Editor.Controls
                                     GetTexture(asset.Resource),
                                     ed.Width, ed.Height,
                                     rotation,
-                                    rectcolor);
+                                    texColor);
                             else
                             {
                                 var tex = GetTexture(asset.Resource);
@@ -244,15 +244,15 @@ namespace WEditor.Modules.Editor.Controls
                                     ed.Width / (tex.Width * asset.ScaleX),
                                     ed.Height / (tex.Height * asset.ScaleY),
                                     rotation,
-                                    rectcolor);
+                                    texColor);
                             }
                         }
 
                         if (obj == SelectedObject)
                         {
-                            DrawingUtilities.DrawRect(right - _scalerSize, right + _scalerSize, bottom - _scalerSize, bottom + _scalerSize, _selectionColor, PolygonMode.Fill);
-                            DrawingUtilities.DrawString(_font, new PointF(left + 1, top + 1), 0.5f, obj.Name, Colors.Black);
-                            DrawingUtilities.DrawString(_font, new PointF(left, top), 0.5f, obj.Name, Colors.White);
+                            DrawingUtilities.DrawRect(right - ScalerSize, right + ScalerSize, bottom - ScalerSize, bottom + ScalerSize, _selectionColor, PolygonMode.Fill);
+                            DrawingUtilities.DrawString(_font, new PointF(left + 1 / _camera.Zoom, top + 1 / _camera.Zoom), 0.5f / _camera.Zoom, obj.Name, Colors.Black);
+                            DrawingUtilities.DrawString(_font, new PointF(left, top), 0.5f / _camera.Zoom, obj.Name, Colors.White);
                         }
                     }
                 }
@@ -464,10 +464,10 @@ namespace WEditor.Modules.Editor.Controls
                 var pos = ToWorld(e.X, e.Y);
                 var right = SelectedObject.Transform.X + SelectedObject.EditorInfo.Width;
                 var bottom = SelectedObject.Transform.Y + SelectedObject.EditorInfo.Height;
-                if (pos.X >= right - _scalerSize &&
-                    pos.Y >= bottom - _scalerSize &&
-                    pos.X <= right + _scalerSize &&
-                    pos.Y <= bottom + _scalerSize)
+                if (pos.X >= right - ScalerSize &&
+                    pos.Y >= bottom - ScalerSize &&
+                    pos.X <= right + ScalerSize &&
+                    pos.Y <= bottom + ScalerSize)
                     _scaling = true;
                 else if (SelectedObject.Contains(pos))
                 {

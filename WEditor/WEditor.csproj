@@ -342,6 +342,8 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\FillDownHS.png" />
+    <Resource Include="Resources\FillUpHS.png" />
     <Content Include="Resources\no-asset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

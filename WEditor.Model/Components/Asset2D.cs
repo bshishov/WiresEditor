@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.ComponentModel;
+using System.ComponentModel.Composition;
+using Caliburn.Micro;
 using WEditor.ComponentLibBase;
 
 namespace Models.Components
@@ -20,9 +22,21 @@ namespace Models.Components
 
     [Export(typeof(IGameComponent))]
     [ExportMetadata("Type", typeof(Asset2D))]
-    public class Asset2D : IGameComponent
+    public class Asset2D : PropertyChangedBase, IGameComponent
     {
-        public string Resource { get; set; }
+        private string _resource;
+
+        [Editor(typeof (WEditor.CustomEditors.FileEditor), typeof (WEditor.CustomEditors.FileEditor))]
+        [Description("Relative path to the resource")]
+        public string Resource
+        {
+            get { return _resource; }
+            set
+            {
+                _resource = GetRelativePath(value);
+                NotifyOfPropertyChange(() => Resource);
+            }
+        }
 
         public Orientation Orientation { get; set; }
 
@@ -43,6 +57,12 @@ namespace Models.Components
         public override string ToString()
         {
             return "Asset";
+        }
+
+        private static string GetRelativePath(string raw)
+        {
+            var index = raw.LastIndexOf('\\');
+            return index > 0 ? raw.Substring(index) : raw;
         }
     }
 }
