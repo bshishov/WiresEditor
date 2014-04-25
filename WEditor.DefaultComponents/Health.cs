@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.Composition;
+using WEditor.ComponentLibBase;
 
-namespace Models.Components
+namespace WEditor.DefaultComponents
 {
-    [ExportComponent(typeof(Health))]
-    class Health : IComponent
+    [Export(typeof(IGameComponent))]
+    [ExportMetadata("Type", typeof(Health))]
+    class Health : IGameComponent
     {
         public int Value { get; set; }
         public int MaxValue { get; set; }

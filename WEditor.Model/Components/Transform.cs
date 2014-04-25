@@ -1,14 +1,17 @@
-﻿#region
+#region
 
 using System.ComponentModel;
+using System.ComponentModel.Composition;
+using WEditor.ComponentLibBase;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #endregion
 
 namespace Models.Components
 {
-    [ExportComponent(typeof(Transform))]
-    public class Transform : IComponent
+    [Export(typeof(IGameComponent))]
+    [ExportMetadata("Type", typeof(Transform))]
+    public class Transform : IGameComponent
     {
         #region Constructors
 

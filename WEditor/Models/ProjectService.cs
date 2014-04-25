@@ -1,15 +1,19 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Windows;
 using Caliburn.Micro;
 using Gemini.Framework.Results;
 using Models;
 using Newtonsoft.Json;
+using WEditor.ComponentLibBase;
 
 #endregion
 
@@ -20,7 +24,6 @@ namespace WEditor.Models
     {
         #region Fields
 
-        private string _filePath;
         private string _folder;
         private string _fileName;
         private Project _project;
@@ -35,6 +38,17 @@ namespace WEditor.Models
             private set
             {
                 _project = value;
+                _project.PropertyChanged += (sender, args) =>
+                {
+                    Uri uri;
+                    if (
+                        args.PropertyName == "ResourcesPath" && 
+                        CurrentProjectFolder != null &&
+                        Uri.TryCreate(_project.ResourcesPath, UriKind.Absolute, out uri))
+                    {
+                        _project.ResourcesPath = GetRelativeUri(uri).ToString().Replace("/", "\\");
+                    }
+                };
                 NotifyOfPropertyChange(() => CurrentProject);
                 NotifyOfPropertyChange(() => CurrentProjectResourcesPath);
             }
@@ -45,7 +59,7 @@ namespace WEditor.Models
             get
             {
                 if(CurrentProject != null)
-                    return CurrentProjectFolder + CurrentProject.ResourcesPath;
+                    return CurrentProjectFolder + CurrentProject.ResourcesPath + "\\";
                 return null;
             }
         }
@@ -58,6 +72,7 @@ namespace WEditor.Models
                 _folder = value;
                 NotifyOfPropertyChange(() => CurrentProjectFolder);
                 NotifyOfPropertyChange(() => CurrentProjectResourcesPath);
+                NotifyOfPropertyChange(() => CurrentProjectFilePath);
             }
         }
 
@@ -67,11 +82,11 @@ namespace WEditor.Models
             {
                 CurrentProject = JsonConvert.DeserializeObject<Project>(File.ReadAllText(path), new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.Objects
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
                 });
-                CurrentProjectFilePath = path;
                 CurrentProjectFileName = Path.GetFileName(path);
-                CurrentProjectFolder = new FileInfo(path).DirectoryName;
+                CurrentProjectFolder = new FileInfo(path).DirectoryName + "\\";
             }
             catch (Exception e)
             {
@@ -83,11 +98,14 @@ namespace WEditor.Models
 
         public IResult Save(string path)
         {
-            CurrentProjectFilePath = path;
+            var fi = new FileInfo(path);
+            CurrentProjectFileName = fi.Name;
+            CurrentProjectFolder = fi.DirectoryName + "\\";
+
             File.WriteAllText(path, JsonConvert.SerializeObject(_project, Formatting.Indented, new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.Objects,
-                TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
             }));
             return new LambdaResult(delegate { Debug.WriteLine("Saved"); });
         }
@@ -97,6 +115,8 @@ namespace WEditor.Models
             var project = new Project();
             project.Locations.Add(new World());
             CurrentProject = project;
+            CurrentProjectFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
+            CurrentProjectFileName = Path.GetRandomFileName(); 
             return new LambdaResult(delegate { Debug.WriteLine("Created"); });
         }
 
@@ -107,12 +127,7 @@ namespace WEditor.Models
 
         public string CurrentProjectFilePath
         {
-            get { return _filePath; }
-            private set
-            {
-                _filePath = value;
-                NotifyOfPropertyChange(() => CurrentProjectFilePath);
-            }
+            get { return CurrentProjectFolder + CurrentProjectFileName; }
         }
 
 
@@ -123,9 +138,29 @@ namespace WEditor.Models
             {
                 _fileName = value;
                 NotifyOfPropertyChange(() => CurrentProjectFileName);
+                NotifyOfPropertyChange(() => CurrentProjectFilePath);
             }
         }
 
+        public Uri GetRelativeUri(Uri uri)
+        {
+            var relRoot = new Uri(CurrentProjectFolder, UriKind.Absolute);
+            return relRoot.MakeRelativeUri(uri);
+        }
+
+        [ImportMany]
+        public Lazy<IGameComponent, IGameComponentMetadata>[] GameComponents
+        {
+            get;
+            private set;
+        }
+
+        public List<Type> GetAvailComponentTypes()
+        {
+            return GameComponents.Select(gameComponent => gameComponent.Metadata.Type).ToList();
+        }
+
         #endregion
+
     }
 }

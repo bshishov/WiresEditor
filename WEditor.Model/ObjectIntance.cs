@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
 using Models.Components;
+using Newtonsoft.Json;
+using WEditor.ComponentLibBase;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #endregion
@@ -24,25 +27,13 @@ namespace Models
 
         private string _name = "NewObject";
 
-        public static IList<Type> AvailComponents
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetTypes().Select(t =>
-                {
-                    var attr = t.GetCustomAttributes(typeof (ExportComponent), true).OfType<ExportComponent>().FirstOrDefault();
-                    return attr != null ? attr.ComponenType : null;
-                }).Where(i => i != null).ToList();
-            }
-        }
-
         #endregion
 
         #region Constructors
 
         public ObjectIntance()
         {
-            Components = new ObservableCollection<IComponent>();
+            Components = new ObservableCollection<IGameComponent>();
         }
 
         #endregion
@@ -61,13 +52,13 @@ namespace Models
         }
 
         [PropertyOrder(1)]
-        [Browsable(true)]
         [Description("Collection of object components")]
-        [NewItemTypes(typeof (Transform), typeof (EditorInfo), typeof(Health))]
-        public ObservableCollection<IComponent> Components { get; set; }
+        [NewItemTypes(typeof (Transform), typeof (EditorInfo))]
+        public ObservableCollection<IGameComponent> Components { get; set; }
 
         [PropertyOrder(2)]
         [ExpandableObject]
+        [JsonIgnore]
         public EditorInfo EditorInfo
         {
             get { return GetComponent<EditorInfo>(); }
@@ -75,6 +66,7 @@ namespace Models
 
         [PropertyOrder(3)]
         [ExpandableObject]
+        [JsonIgnore]
         public Transform Transform
         {
             get { return GetComponent<Transform>(); }
@@ -91,7 +83,7 @@ namespace Models
         }
 
         public T GetComponent<T>()
-            where T : IComponent
+            where T : IGameComponent
         {
             return Components.OfType<T>().FirstOrDefault();
         }

@@ -1,4 +1,7 @@
-﻿namespace Models.Components
+﻿using System.ComponentModel.Composition;
+using WEditor.ComponentLibBase;
+
+namespace Models.Components
 {
     public enum Orientation
     {
@@ -14,8 +17,10 @@
         Tile,
     }
 
-    [ExportComponent(typeof(Asset2D))]
-    public class Asset2D : IComponent
+
+    [Export(typeof(IGameComponent))]
+    [ExportMetadata("Type", typeof(Asset2D))]
+    public class Asset2D : IGameComponent
     {
         public string Resource { get; set; }
 

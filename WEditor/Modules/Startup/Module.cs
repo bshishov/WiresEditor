@@ -15,6 +15,7 @@ using Gemini.Framework.Services;
 using Gemini.Modules.MainMenu.Models;
 using Gemini.Modules.PropertyGrid;
 using Microsoft.Win32;
+using Models;
 using WEditor.Models;
 using WEditor.Modules.Editor.ViewModels;
 using WEditor.Modules.ProjectBrowser.ViewModels;
@@ -63,7 +64,7 @@ namespace WEditor.Modules.Startup
                 .WithGlobalShortcut(ModifierKeys.Control, Key.N));
             fileMenu.Children.Insert(1, new MenuItem("_Open", OpenFile)
                 .WithIcon("/Resources/openfolderHS.png")
-                .WithGlobalShortcut(ModifierKeys.Control, Key.N));
+                .WithGlobalShortcut(ModifierKeys.Control, Key.O));
             fileMenu.Children.Insert(2, new MenuItem("_Save", SaveFile)
                 .WithIcon("/Resources/saveHS.png")
                 .WithGlobalShortcut(ModifierKeys.Control, Key.S));
@@ -87,11 +88,8 @@ namespace WEditor.Modules.Startup
 
         public override void PostInitialize()
         {
-            var docs = Shell.Documents.OfType<GlViewModel>().ToList();
-            foreach (var result in docs)
-            {
-                result.TryClose();
-            }
+            while (Shell.Documents.Count > 0)
+                Shell.CloseDocument(Shell.Documents.First());    
         }
 
         private IEnumerable<IResult> NewFile()

@@ -1,5 +1,7 @@
 ﻿#region
 
+using System;
+using System.Collections.Generic;
 using Caliburn.Micro;
 using Models;
 
@@ -31,6 +33,8 @@ namespace WEditor.Models
         IResult Save(string path);
 
         IResult CreateNew();
+
+        List<Type> GetAvailComponentTypes();
 
         #endregion
     }

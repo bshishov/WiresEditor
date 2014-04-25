@@ -2,15 +2,18 @@
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.Windows.Media;
+using WEditor.ComponentLibBase;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 #endregion
 
 namespace Models.Components
 {
-    [ExportComponent(typeof(EditorInfo))]
-    public class EditorInfo : IComponent, ICloneable
+    [Export(typeof(IGameComponent))]
+    [ExportMetadata("Type", typeof(EditorInfo))]
+    public class EditorInfo : IGameComponent, ICloneable
     {
         #region Constructors
 
@@ -55,7 +58,7 @@ namespace Models.Components
 
         #endregion
 
-        #region IComponent Members
+        #region IGameComponent Members
 
         public override string ToString()
         {

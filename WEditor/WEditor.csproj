@@ -85,6 +85,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Gemini.Modules.PropertyGrid.0.4.0\lib\net40\Gemini.Modules.PropertyGrid.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -100,19 +101,15 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net40\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -164,10 +161,6 @@
     <Compile Include="Modules\CollectionEditor\Views\CollectionEditorView.xaml.cs">
       <DependentUpon>CollectionEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Editor\ViewModels\WpfEditorViewModel.cs" />
-    <Compile Include="Modules\Editor\Views\WpfEditorView.xaml.cs">
-      <DependentUpon>WpfEditorView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\ProjectBrowser\Controls\ProjectBrowserItem.xaml.cs">
       <DependentUpon>ProjectBrowserItem.xaml</DependentUpon>
     </Compile>
@@ -177,6 +170,7 @@
       <DependentUpon>ProjectBrowserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Startup\Module.cs" />
+    <Compile Include="MyBootstrapper.cs" />
     <Compile Include="Utilities\Camera.cs" />
     <Compile Include="Utilities\DrawingUtilities.cs" />
     <Compile Include="Utilities\IStartupArgs.cs" />
@@ -233,10 +227,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\Editor\Controls\GlViewer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Modules\Editor\Views\WpfEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -333,9 +323,17 @@
     <Resource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Models\Models.csproj">
+    <ProjectReference Include="..\WEditor.ComponentLibBase\WEditor.ComponentLibBase.csproj">
+      <Project>{3944c487-5b81-43d1-aad9-b02f24e67f6f}</Project>
+      <Name>WEditor.ComponentLibBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WEditor.CustomEditors\WEditor.CustomEditors.csproj">
+      <Project>{efccce04-d410-4a1d-8724-e6e95b8f7322}</Project>
+      <Name>WEditor.CustomEditors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WEditor.Model\WEditor.Model.csproj">
       <Project>{0084e149-4649-4813-aaa9-cac9527bfc60}</Project>
-      <Name>Models</Name>
+      <Name>WEditor.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +348,9 @@
     <SplashScreen Include="Resources\splash.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugins\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

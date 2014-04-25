@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="WEditor.CustomEditors.PathEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:Height="24" d:Width="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="{Binding Value, FallbackValue=Null}" Grid.Column="0" />
+        <Button Content="Open" Click="Button_Click" HorizontalAlignment="Right" Grid.Column="1" />
+    </Grid>
+</UserControl>

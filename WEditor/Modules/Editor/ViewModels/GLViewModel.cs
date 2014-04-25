@@ -8,12 +8,12 @@ using Caliburn.Micro;
 using Gemini.Framework;
 using Gemini.Modules.PropertyGrid;
 using Models;
+using WEditor.ComponentLibBase;
 using WEditor.Models;
 using WEditor.Modules.Editor.Controls;
 using WEditor.Modules.ProjectBrowser.ViewModels;
 using WEditor.Utilities;
 using Xceed.Wpf.Toolkit;
-using IComponent = Models.IComponent;
 
 #endregion
 
@@ -39,7 +39,6 @@ namespace WEditor.Modules.Editor.ViewModels
 
         public GlViewModel()
         {
-            CurrentWorld = new World();
             DisplayName = "[CLOSE ME]";
             GridSize = 50;
         }
@@ -155,14 +154,20 @@ namespace WEditor.Modules.Editor.ViewModels
             }
             else
             {
-                var dialog = new CollectionControlDialog(typeof (IComponent))
+                var projectService = IoC.Get<IProjectService>();
+                var dialog = new CollectionControlDialog(typeof (IGameComponent))
                 {
                     Title = "Components",
                     ItemsSource = SelectedObject.Components,
-                    NewItemTypes = ObjectIntance.AvailComponents
+                    NewItemTypes = projectService.GetAvailComponentTypes()
                 };
                 dialog.ShowDialog();
             }
+        }
+
+        public override bool ShouldSerializeIsNotifying()
+        {
+            return false;
         }
 
         #endregion

@@ -10,6 +10,7 @@ using Gemini.Framework;
 using Gemini.Framework.Services;
 using Gemini.Modules.PropertyGrid;
 using Models;
+using WEditor.ComponentLibBase;
 using WEditor.Models;
 using WEditor.Modules.Editor.ViewModels;
 using Xceed.Wpf.Toolkit;
@@ -83,12 +84,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
                 .SelectMany(location => location.Layers)
                 .FirstOrDefault(layer => layer.Objects.Contains(obj));
         }
-        private ObjectIntance GetParentFor(IComponent component, Project project)
+        private ObjectIntance GetParentFor(IGameComponent gameComponent, Project project)
         {
             return project.Locations
                 .SelectMany(location => location.Layers)
                 .SelectMany(layer => layer.Objects)
-                .FirstOrDefault(obj => obj.Components.Contains(component));
+                .FirstOrDefault(obj => obj.Components.Contains(gameComponent));
         }
         #endregion
 
@@ -235,11 +236,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             if (obj == null)
                 return;
 
-            var dialog = new CollectionControlDialog(typeof(IComponent))
+            var projectService = IoC.Get<IProjectService>();
+            var dialog = new CollectionControlDialog(typeof(IGameComponent))
             {
                 Title = "Components",
                 ItemsSource = obj.Components,
-                NewItemTypes = ObjectIntance.AvailComponents
+                NewItemTypes = projectService.GetAvailComponentTypes()
             };
             dialog.ShowDialog();
         }
@@ -249,7 +251,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
         #region Component ContextMenu
         public void OnSelectComponent(object item)
         {
-            var component = item as IComponent;
+            var component = item as IGameComponent;
             if (component == null)
                 return;
             IoC.Get<IPropertyGrid>().SelectedObject = component;
@@ -257,7 +259,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
 
         public void OnDeleteComponent(object item)
         {
-            var component = item as IComponent;
+            var component = item as IGameComponent;
             if (component == null)
                 return;
             var obj = GetParentFor(component, Projects.First());
@@ -281,7 +283,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             if (obj is ObjectIntance)
                 OnSelectObject(obj);
 
-            if (obj is IComponent)
+            if (obj is IGameComponent)
                 OnSelectComponent(obj);
 
             if (obj is World)

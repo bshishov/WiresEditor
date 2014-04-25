@@ -2,12 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:gemini="http://schemas.timjones.tw/gemini"
+             xmlns:WEditor="clr-namespace:WEditor"
              Startup="AppStartup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
-                    <gemini:AppBootstrapper x:Key="bootstrapper" />
+                    <!-- <gemini:AppBootstrapper x:Key="bootstrapper" /> -->
+                    <WEditor:MyAppBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
