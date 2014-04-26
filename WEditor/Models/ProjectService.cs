@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,9 +23,16 @@ namespace WEditor.Models
     {
         #region Fields
 
-        private string _folder;
         private string _fileName;
+        private string _folder;
         private Project _project;
+
+        #endregion
+
+        #region Properties
+
+        [ImportMany]
+        public Lazy<IGameComponent, IGameComponentMetadata>[] GameComponents { get; private set; }
 
         #endregion
 
@@ -42,7 +48,7 @@ namespace WEditor.Models
                 {
                     Uri uri;
                     if (
-                        args.PropertyName == "ResourcesPath" && 
+                        args.PropertyName == "ResourcesPath" &&
                         CurrentProjectFolder != null &&
                         Uri.TryCreate(_project.ResourcesPath, UriKind.Absolute, out uri))
                     {
@@ -58,7 +64,7 @@ namespace WEditor.Models
         {
             get
             {
-                if(CurrentProject != null)
+                if (CurrentProject != null)
                     return CurrentProjectFolder + CurrentProject.ResourcesPath + "\\";
                 return null;
             }
@@ -116,7 +122,7 @@ namespace WEditor.Models
             project.Locations.Add(new World());
             CurrentProject = project;
             CurrentProjectFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
-            CurrentProjectFileName = Path.GetRandomFileName(); 
+            CurrentProjectFileName = Path.GetRandomFileName();
             return new LambdaResult(delegate { Debug.WriteLine("Created"); });
         }
 
@@ -142,19 +148,6 @@ namespace WEditor.Models
             }
         }
 
-        public Uri GetRelativeUri(Uri uri)
-        {
-            var relRoot = new Uri(CurrentProjectFolder, UriKind.Absolute);
-            return relRoot.MakeRelativeUri(uri);
-        }
-
-        [ImportMany]
-        public Lazy<IGameComponent, IGameComponentMetadata>[] GameComponents
-        {
-            get;
-            private set;
-        }
-
         public List<Type> GetAvailComponentTypes()
         {
             return GameComponents.Select(gameComponent => gameComponent.Metadata.Type).ToList();
@@ -162,5 +155,14 @@ namespace WEditor.Models
 
         #endregion
 
+        #region Methods
+
+        public Uri GetRelativeUri(Uri uri)
+        {
+            var relRoot = new Uri(CurrentProjectFolder, UriKind.Absolute);
+            return relRoot.MakeRelativeUri(uri);
+        }
+
+        #endregion
     }
 }

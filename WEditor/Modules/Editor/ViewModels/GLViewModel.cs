@@ -1,8 +1,8 @@
 ﻿#region
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Windows.Media;
 using Caliburn.Micro;
 using Gemini.Framework;
@@ -107,7 +107,12 @@ namespace WEditor.Modules.Editor.ViewModels
 
         public string ResourcesPath
         {
-            get { return IoC.Get<IProjectService>().CurrentProjectResourcesPath; }
+            get
+            {
+                var ps = IoC.Get<IProjectService>();
+                if (ps == null) return "";
+                return ps.CurrentProjectResourcesPath ?? "";
+            }
         }
 
         #endregion
@@ -132,8 +137,8 @@ namespace WEditor.Modules.Editor.ViewModels
             {
                 var a = args as ClickEventArgs;
                 Layer layer;
-                if(IoC.Get<ProjectBrowserViewModel>().SelectedObject is Layer)
-                    layer = (Layer)IoC.Get<ProjectBrowserViewModel>().SelectedObject;
+                if (IoC.Get<ProjectBrowserViewModel>().SelectedObject is Layer)
+                    layer = (Layer) IoC.Get<ProjectBrowserViewModel>().SelectedObject;
                 else
                     return;
                 if (layer == null || a == null)
@@ -161,7 +166,7 @@ namespace WEditor.Modules.Editor.ViewModels
                     ItemsSource = SelectedObject.Components,
                     NewItemTypes = projectService.GetAvailComponentTypes()
                 };
-                dialog.ShowDialog();
+                dialog.Show();
             }
         }
 

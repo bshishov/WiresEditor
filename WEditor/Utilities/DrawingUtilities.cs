@@ -4,8 +4,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
-using Models.Components;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Color = System.Windows.Media.Color;
@@ -89,23 +87,23 @@ namespace WEditor.Utilities
 
             bmp.UnlockBits(bmpData);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.Repeat);
 
             if (generateMipMaps)
             {
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.LinearMipmapLinear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
                 GL.Ext.GenerateTextureMipmap(id, TextureTarget.Texture2D);
             }
             else
             {
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Nearest);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
             }
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
-            return new TextureInfo(){GlId = id,Height = bmp.Height,Width = bmp.Width};
+            return new TextureInfo {GlId = id, Height = bmp.Height, Width = bmp.Width};
         }
 
         private static void InnerDraw(float x, float y, float w, float h, float scaleX, float scaleY, float rotation)
@@ -114,26 +112,26 @@ namespace WEditor.Utilities
             var p2 = new PointF(scaleX, 0);
             var p3 = new PointF(scaleX, scaleY);
             var p4 = new PointF(0, scaleY);
-            
+
             GL.TexCoord2(p1.X, p1.Y);
             GL.Vertex2(x, y);
 
             GL.TexCoord2(p4.X, p4.Y);
             GL.Vertex2(x, y + h);
-            
+
             GL.TexCoord2(p3.X, p3.Y);
             GL.Vertex2(x + w, y + h);
-            
+
             GL.TexCoord2(p2.X, p2.Y);
             GL.Vertex2(x + w, y);
         }
 
         public static void DrawTexture(
-            PointF pos, 
-            TextureInfo info, 
-            float width, 
+            PointF pos,
+            TextureInfo info,
+            float width,
             float height,
-            float rotation, 
+            float rotation,
             Color color)
         {
             GL.MatrixMode(MatrixMode.Texture);
@@ -142,7 +140,7 @@ namespace WEditor.Utilities
             GL.LoadMatrix(ref m);
 
             GL.BindTexture(TextureTarget.Texture2D, info.GlId);
-            
+
             GL.Begin(PrimitiveType.Quads);
             GL.Color4(color.ScR, color.ScG, color.ScB, color.ScA);
 
@@ -153,13 +151,13 @@ namespace WEditor.Utilities
         }
 
         public static void DrawTiledTexture(
-            PointF pos, 
-            TextureInfo info, 
-            float width, 
-            float height, 
-            float scaleX, 
+            PointF pos,
+            TextureInfo info,
+            float width,
+            float height,
+            float scaleX,
             float scaleY,
-            float rotation, 
+            float rotation,
             Color color)
         {
             GL.MatrixMode(MatrixMode.Texture);
@@ -168,7 +166,7 @@ namespace WEditor.Utilities
             GL.LoadMatrix(ref m);
 
             GL.BindTexture(TextureTarget.Texture2D, info.GlId);
-            
+
             GL.Begin(PrimitiveType.Quads);
             GL.Color4(color.ScR, color.ScG, color.ScB, color.ScA);
 
@@ -191,19 +189,19 @@ namespace WEditor.Utilities
 
                 //top left
                 GL.TexCoord2(coords.X1, coords.Y1);
-                GL.Vertex2(pos.X + (i * font.CharWidth + i * font.Kern) * scale, pos.Y);
+                GL.Vertex2(pos.X + (i*font.CharWidth + i*font.Kern)*scale, pos.Y);
 
                 //top right
                 GL.TexCoord2(coords.X2, coords.Y1);
-                GL.Vertex2(pos.X + ((i + 1) * font.CharWidth + i * font.Kern) * scale, pos.Y);
+                GL.Vertex2(pos.X + ((i + 1)*font.CharWidth + i*font.Kern)*scale, pos.Y);
 
                 //bottom right
                 GL.TexCoord2(coords.X2, coords.Y2);
-                GL.Vertex2(pos.X + ((i + 1) * font.CharWidth + i * font.Kern) * scale, pos.Y + font.CharHeight * scale);
+                GL.Vertex2(pos.X + ((i + 1)*font.CharWidth + i*font.Kern)*scale, pos.Y + font.CharHeight*scale);
 
                 //bottom left
                 GL.TexCoord2(coords.X1, coords.Y2);
-                GL.Vertex2(pos.X + (i * font.CharWidth + i * font.Kern) * scale, pos.Y + font.CharHeight * scale); 
+                GL.Vertex2(pos.X + (i*font.CharWidth + i*font.Kern)*scale, pos.Y + font.CharHeight*scale);
             }
 
             GL.End();

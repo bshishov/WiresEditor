@@ -11,8 +11,8 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Models.Components
 {
-    [Export(typeof(IGameComponent))]
-    [ExportMetadata("Type", typeof(EditorInfo))]
+    [Export(typeof (IGameComponent))]
+    [ExportMetadata("Type", typeof (EditorInfo))]
     public class EditorInfo : IGameComponent, ICloneable
     {
         #region Constructors
@@ -58,7 +58,16 @@ namespace Models.Components
 
         #endregion
 
-        #region IGameComponent Members
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        #endregion
+
+        #region Methods
 
         public override string ToString()
         {
@@ -66,10 +75,5 @@ namespace Models.Components
         }
 
         #endregion
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }

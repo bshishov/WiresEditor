@@ -1,26 +1,34 @@
-﻿
+﻿#region
+
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+
+#endregion
 
 namespace WEditor.Utilities
 {
-    struct SpriteCoord
+    internal struct SpriteCoord
     {
+        #region Fields
+
         public float X1;
-        public float Y1;
         public float X2;
+        public float Y1;
         public float Y2;
+
+        #endregion
     }
 
-    class SpriteFont
+    internal class SpriteFont
     {
-        public int GlTextureId { get; private set; }
-        public float CharWidth { get; private set; }
-        public float CharHeight { get; private set; }
-        public float Kern { get; private set; }
+        #region Fields
 
-        private Dictionary<char, SpriteCoord> _coords = new Dictionary<char, SpriteCoord>();
+        private readonly Dictionary<char, SpriteCoord> _coords = new Dictionary<char, SpriteCoord>();
+
+        #endregion
+
+        #region Constructors
 
         public SpriteFont(string filename, float charWidth = 14, float charHeight = 14)
         {
@@ -31,16 +39,16 @@ namespace WEditor.Utilities
 
             for (var i = 0; i < 256; i++)
             {
-                var ch = (char)i;
-                var row = i / 16;
-                var col = i % 16;
+                var ch = (char) i;
+                var row = i/16;
+                var col = i%16;
 
-                var coord = new SpriteCoord()
+                var coord = new SpriteCoord
                 {
-                    X1 = col / 16f,
-                    X2 = (col + 1) / 16f,
-                    Y1 = row / 16f,
-                    Y2 = (row + 1) / 16f
+                    X1 = col/16f,
+                    X2 = (col + 1)/16f,
+                    Y1 = row/16f,
+                    Y2 = (row + 1)/16f
                 };
                 _coords.Add(ch, coord);
             }
@@ -48,35 +56,35 @@ namespace WEditor.Utilities
 
         public SpriteFont(Font font)
         {
-            CharWidth = font.Size * 1.2f;
-            CharHeight = font.Size * 1.6f;
-            Kern = -CharWidth / 4;
-            var spritefont = new Bitmap((int)(CharWidth * 256), (int)CharHeight);
+            CharWidth = font.Size*1.2f;
+            CharHeight = font.Size*1.6f;
+            Kern = -CharWidth/4;
+            var spritefont = new Bitmap((int) (CharWidth*256), (int) CharHeight);
             using (var gfx = Graphics.FromImage(spritefont))
             {
                 //gfx.Clear(ColorTranslator.FromHtml("#FF00FF"));
                 gfx.Clear(Color.Transparent);
-                gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                var brush = new SolidBrush(Color.White); 
-                
+                gfx.TextRenderingHint = TextRenderingHint.AntiAlias;
+                var brush = new SolidBrush(Color.White);
+
                 for (var i = 0; i < 256; i++)
                 {
                     var ch = (char) i;
                     if (i >= 32 && i <= 128)
                     {
                         gfx.DrawString(
-                            ch.ToString(), 
-                            font, 
-                            brush, 
-                            i * CharWidth, 
+                            ch.ToString(),
+                            font,
+                            brush,
+                            i*CharWidth,
                             0);
                     }
 
-                    const float frac = 1 / 256f;
-                    _coords.Add(ch, new SpriteCoord()
+                    const float frac = 1/256f;
+                    _coords.Add(ch, new SpriteCoord
                     {
-                        X1 = i * frac,
-                        X2 = (i + 1) * frac,
+                        X1 = i*frac,
+                        X2 = (i + 1)*frac,
                         Y1 = 0f,
                         Y2 = 1f,
                     });
@@ -85,9 +93,24 @@ namespace WEditor.Utilities
             GlTextureId = DrawingUtilities.LoadTexture(spritefont, true).GlId;
         }
 
+        #endregion
+
+        #region Properties
+
+        public int GlTextureId { get; private set; }
+        public float CharWidth { get; private set; }
+        public float CharHeight { get; private set; }
+        public float Kern { get; private set; }
+
+        #endregion
+
+        #region Methods
+
         public SpriteCoord Get(char ch)
         {
             return _coords[ch];
         }
+
+        #endregion
     }
 }

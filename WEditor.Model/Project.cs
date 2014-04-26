@@ -1,10 +1,10 @@
 #region
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Caliburn.Micro;
+using WEditor.CustomEditors;
 
 #endregion
 
@@ -21,6 +21,8 @@ namespace Models
         ///     Prefabs (templates) for the object instances
         /// </summary>
         public List<ObjectIntance> ObjectPrefabs;
+
+        private string _resourcesPath;
 
         #endregion
 
@@ -42,17 +44,15 @@ namespace Models
         /// </summary>
         public ObservableCollection<World> Locations { get; set; }
 
-        private string _resourcesPath;
-
-        [Editor(typeof (WEditor.CustomEditors.PathEditor), typeof (WEditor.CustomEditors.PathEditor))]
+        [Editor(typeof (PathEditor), typeof (PathEditor))]
         [Description("Relative path to the resources folder")]
         public string ResourcesPath
         {
-            get { return _resourcesPath; } 
-            set 
-            { 
-                _resourcesPath = value; 
-                NotifyOfPropertyChange(()=>ResourcesPath); 
+            get { return _resourcesPath; }
+            set
+            {
+                _resourcesPath = value;
+                NotifyOfPropertyChange(() => ResourcesPath);
             }
         }
 

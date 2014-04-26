@@ -2,8 +2,12 @@
 {
     public struct TextureInfo
     {
-        public float Width;
-        public float Height;
+        #region Fields
+
         public int GlId;
+        public float Height;
+        public float Width;
+
+        #endregion
     }
 }

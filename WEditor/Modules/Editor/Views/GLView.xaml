@@ -11,11 +11,11 @@
     d:DesignWidth="300">
     <controls:GlViewer
         d:IsHidden="true"
-        ResourcesPath="{Binding ResourcesPath, Mode=OneWay}"
+        ResourcesPath="{Binding ResourcesPath, FallbackValue=Resources}"
         GlBackground="{Binding Background, FallbackValue=Gray, Mode=OneWay}"
         GridSize="{Binding GridSize, FallbackValue=16, Mode=OneWay}"
         GridColor="{Binding GridColor, FallbackValue=LightGray, Mode=OneWay}"
-        World="{Binding CurrentWorld, Mode=OneWay}"
+        World="{Binding CurrentWorld}"
         SelectedObject="{Binding SelectedObject, Mode=TwoWay}"
         cal:Message.Attach="
         [Event SelectionChanged] = [Action OnSelect($eventArgs)];

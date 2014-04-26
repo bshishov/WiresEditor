@@ -1,27 +1,38 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
+using System.IO;
 using System.Linq;
 using Caliburn.Micro;
 using Gemini.Framework.Services;
+
+#endregion
 
 namespace WEditor
 {
     public class MyAppBootstrapper : Bootstrapper<IMainWindow>
     {
+        #region Properties
+
         protected CompositionContainer Container { get; set; }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// By default, we are configured to use MEF
+        ///     By default, we are configured to use MEF
         /// </summary>
         protected override void Configure()
         {
-            const string pluginsPath = "Plugins"; 
-            if (!System.IO.Directory.Exists(pluginsPath))
-                System.IO.Directory.CreateDirectory(pluginsPath);
-            
+            const string pluginsPath = "Plugins";
+            if (!Directory.Exists(pluginsPath))
+                Directory.CreateDirectory(pluginsPath);
+
             var pluginsCatalog = new DirectoryCatalog(pluginsPath);
             var pluginsProvider = new CatalogExportProvider(pluginsCatalog);
 
@@ -56,7 +67,6 @@ namespace WEditor
             batch.AddExportedValue(mainCatalog);
 
             Container.Compose(batch);
-           
         }
 
         protected virtual void BindServices(CompositionBatch batch)
@@ -86,6 +96,7 @@ namespace WEditor
         {
             Container.SatisfyImportsOnce(instance);
         }
+
+        #endregion
     }
- 
 }

@@ -15,9 +15,7 @@ using Gemini.Framework.Services;
 using Gemini.Modules.MainMenu.Models;
 using Gemini.Modules.PropertyGrid;
 using Microsoft.Win32;
-using Models;
 using WEditor.Models;
-using WEditor.Modules.Editor.ViewModels;
 using WEditor.Modules.ProjectBrowser.ViewModels;
 using WEditor.Utilities;
 
@@ -89,7 +87,7 @@ namespace WEditor.Modules.Startup
         public override void PostInitialize()
         {
             while (Shell.Documents.Count > 0)
-                Shell.CloseDocument(Shell.Documents.First());    
+                Shell.CloseDocument(Shell.Documents.First());
         }
 
         private IEnumerable<IResult> NewFile()

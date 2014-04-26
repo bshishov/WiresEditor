@@ -9,8 +9,8 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Models.Components
 {
-    [Export(typeof(IGameComponent))]
-    [ExportMetadata("Type", typeof(Transform))]
+    [Export(typeof (IGameComponent))]
+    [ExportMetadata("Type", typeof (Transform))]
     public class Transform : IGameComponent
     {
         #region Constructors
@@ -45,9 +45,13 @@ namespace Models.Components
 
         #endregion
 
+        #region Methods
+
         public override string ToString()
         {
             return "Transform";
         }
+
+        #endregion
     }
 }

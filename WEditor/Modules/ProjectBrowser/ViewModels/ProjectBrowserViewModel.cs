@@ -22,6 +22,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
     [Export(typeof (ProjectBrowserViewModel))]
     internal class ProjectBrowserViewModel : Tool
     {
+        #region Fields
+
+        private object _selected;
+
+        #endregion
+
         #region Constructors
 
         public ProjectBrowserViewModel()
@@ -57,33 +63,38 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             get { return 200; }
         }
 
-        private object _selected;
         public Object SelectedObject
         {
             get { return _selected; }
-            set { _selected = value; NotifyOfPropertyChange(()=>SelectedObject); }
+            set
+            {
+                _selected = value;
+                NotifyOfPropertyChange(() => SelectedObject);
+            }
         }
 
         #endregion
 
         #region Methods
-        
-        #region GetParent Methods
+
         private Project GetParentFor(World world, Project project)
         {
             return project.Locations.Contains(world) ? project : null;
         }
+
         private World GetParentFor(Layer layer, Project project)
         {
             return project.Locations
                 .FirstOrDefault(world => world.Layers.Contains(layer));
         }
+
         private Layer GetParentFor(ObjectIntance obj, Project project)
         {
             return project.Locations
                 .SelectMany(location => location.Layers)
                 .FirstOrDefault(layer => layer.Objects.Contains(obj));
         }
+
         private ObjectIntance GetParentFor(IGameComponent gameComponent, Project project)
         {
             return project.Locations
@@ -91,9 +102,39 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
                 .SelectMany(layer => layer.Objects)
                 .FirstOrDefault(obj => obj.Components.Contains(gameComponent));
         }
+
+        public void OnSelectionChanged(object sender, EventArgs e)
+        {
+            var args = e as RoutedPropertyChangedEventArgs<object>;
+            if (args == null || args.NewValue == null)
+            {
+                SelectedObject = null;
+                return;
+            }
+            var obj = args.NewValue;
+
+            if (obj is ObjectIntance)
+                OnSelectObject(obj);
+
+            if (obj is IGameComponent)
+                OnSelectComponent(obj);
+
+            if (obj is World)
+                OnSelectWorld(obj);
+
+            if (obj is Layer)
+                OnSelectLayer(obj);
+
+            if (obj is Project)
+                OnSelectProject(obj);
+
+            SelectedObject = obj;
+        }
+
         #endregion
 
         #region Project ContextMenu
+
         public void OnAddWorldToProject(object item)
         {
             var project = item as Project;
@@ -108,10 +149,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             if (project == null)
                 return;
             IoC.Get<IPropertyGrid>().SelectedObject = item;
-        } 
+        }
+
         #endregion
 
         #region World ContextMenu
+
         public void OnSelectWorld(object item)
         {
             var world = item as World;
@@ -126,7 +169,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             var world = item as World;
             if (world == null)
                 return;
-            world.Layers.Insert(0,new Layer());
+            world.Layers.Insert(0, new Layer());
         }
 
         public void OnDeleteWorld(object item)
@@ -134,12 +177,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             var world = item as World;
             if (world == null)
                 return;
-            
+
             var doc = IoC.Get<IShell>().Documents
                 .OfType<GlViewModel>()
                 .FirstOrDefault(d => d.CurrentWorld.Equals(world));
-            
-            if(doc != null)
+
+            if (doc != null)
                 doc.TryClose();
 
             var project = GetParentFor(world, Projects.First());
@@ -155,8 +198,8 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
 
             var doc = IoC.Get<IShell>().Documents.FirstOrDefault(
                 l => (l is GlViewModel) &&
-                     ((GlViewModel)l).CurrentWorld != null &&
-                     ((GlViewModel)l).CurrentWorld.Equals(world));
+                     ((GlViewModel) l).CurrentWorld != null &&
+                     ((GlViewModel) l).CurrentWorld.Equals(world));
 
             // If no opened document with this World - create new window
             // else reopen existing
@@ -169,10 +212,12 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             if (world == null)
                 return;
             IoC.Get<IPropertyGrid>().SelectedObject = item;
-        } 
+        }
+
         #endregion
 
         #region Layer ContextMenu
+
         public void OnSelectLayer(object item)
         {
             var layer = item as Layer;
@@ -217,24 +262,26 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             index += up ? -1 : +1;
             index = Math.Max(0, index);
             index = Math.Min(0, world.Layers.Count - 1);
-            
+
             world.Layers.Remove(layer);
             world.Layers.Insert(index, layer);
-        } 
+        }
+
         #endregion
 
         #region Object ContextMenu
+
         public void OnSelectObject(object item)
         {
             var obj = item as ObjectIntance;
             if (obj == null)
                 return;
             IoC.Get<IPropertyGrid>().SelectedObject = obj;
-            var doc = IoC.Get<IShell>().Documents.Where(d=>d.IsActive).OfType<GlViewModel>().FirstOrDefault();
-            if(doc != null)
+            var doc = IoC.Get<IShell>().Documents.Where(d => d.IsActive).OfType<GlViewModel>().FirstOrDefault();
+            if (doc != null)
                 doc.SelectedObject = obj;
         }
-       
+
         public void OnDeleteObject(object item)
         {
             var obj = item as ObjectIntance;
@@ -252,7 +299,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
                 return;
 
             var projectService = IoC.Get<IProjectService>();
-            var dialog = new CollectionControlDialog(typeof(IGameComponent))
+            var dialog = new CollectionControlDialog(typeof (IGameComponent))
             {
                 Title = "Components",
                 ItemsSource = obj.Components,
@@ -260,10 +307,11 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             };
             dialog.ShowDialog();
         }
-        
+
         #endregion
 
         #region Component ContextMenu
+
         public void OnSelectComponent(object item)
         {
             var component = item as IGameComponent;
@@ -280,37 +328,6 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             var obj = GetParentFor(component, Projects.First());
             if (obj != null)
                 obj.Components.Remove(component);
-        }
-
-        #endregion
-
-
-        public void OnSelectionChanged(object sender, EventArgs e)
-        {
-            var args = e as RoutedPropertyChangedEventArgs<object>;
-            if (args == null || args.NewValue == null)
-            {
-                SelectedObject = null;
-                return;
-            }
-            var obj = args.NewValue;
-
-            if (obj is ObjectIntance)
-                OnSelectObject(obj);
-
-            if (obj is IGameComponent)
-                OnSelectComponent(obj);
-
-            if (obj is World)
-                OnSelectWorld(obj);
-
-            if (obj is Layer)
-                OnSelectLayer(obj);
-
-            if (obj is Project)
-                OnSelectProject(obj);
-
-            SelectedObject = obj;
         }
 
         #endregion

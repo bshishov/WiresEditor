@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace WEditor.ComponentLibBase
 {
     /// <summary>
-    /// Base interface for all game components
+    ///     Base interface for all game components
     /// </summary>
     public interface IGameComponent
     {
@@ -11,6 +15,10 @@ namespace WEditor.ComponentLibBase
 
     public interface IGameComponentMetadata
     {
+        #region Properties
+
         Type Type { get; }
+
+        #endregion
     }
 }

@@ -1,11 +1,7 @@
 ﻿#region
 
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Diagnostics;
 using System.Windows;
 using Caliburn.Micro;
-using WEditor.ComponentLibBase;
 using WEditor.Utilities;
 
 #endregion

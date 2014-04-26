@@ -1,13 +1,9 @@
 #region
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using Caliburn.Micro;
 using Models.Components;
 using Newtonsoft.Json;
@@ -95,7 +91,7 @@ namespace Models
             if (info == null)
                 obj.Components.Add(new EditorInfo());
             else
-                obj.Components.Add((EditorInfo)info.Clone());
+                obj.Components.Add((EditorInfo) info.Clone());
             return obj;
         }
 

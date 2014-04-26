@@ -1,7 +1,12 @@
-﻿using System.ComponentModel;
+﻿#region
+
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using Caliburn.Micro;
 using WEditor.ComponentLibBase;
+using WEditor.CustomEditors;
+
+#endregion
 
 namespace Models.Components
 {
@@ -20,13 +25,31 @@ namespace Models.Components
     }
 
 
-    [Export(typeof(IGameComponent))]
-    [ExportMetadata("Type", typeof(Asset2D))]
+    [Export(typeof (IGameComponent))]
+    [ExportMetadata("Type", typeof (Asset2D))]
     public class Asset2D : PropertyChangedBase, IGameComponent
     {
-        private string _resource;
+        #region Fields
 
-        [Editor(typeof (WEditor.CustomEditors.FileEditor), typeof (WEditor.CustomEditors.FileEditor))]
+        private string _resource = "";
+
+        #endregion
+
+        #region Constructors
+
+        public Asset2D()
+        {
+            ScaleX = 50/8f;
+            ScaleY = 50/8f;
+            ImageMode = ImageMode.Tile;
+            Orientation = Orientation.North;
+        }
+
+        #endregion
+
+        #region Properties
+
+        [Editor(typeof (FileEditor), typeof (FileEditor))]
         [Description("Relative path to the resource")]
         public string Resource
         {
@@ -46,13 +69,9 @@ namespace Models.Components
 
         public float ScaleY { get; set; }
 
-        public Asset2D()
-        {
-            ScaleX = 50 / 8f;
-            ScaleY = 50 / 8f;
-            ImageMode = ImageMode.Tile;
-            Orientation = Orientation.North;
-        }
+        #endregion
+
+        #region Methods
 
         public override string ToString()
         {
@@ -64,5 +83,7 @@ namespace Models.Components
             var index = raw.LastIndexOf('\\');
             return index > 0 ? raw.Substring(index) : raw;
         }
+
+        #endregion
     }
 }

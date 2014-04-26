@@ -1,10 +1,4 @@
-﻿#region
-
-
-
-#endregion
-
-namespace WEditor.Utilities
+﻿namespace WEditor.Utilities
 {
     internal interface IStartupArgs
     {

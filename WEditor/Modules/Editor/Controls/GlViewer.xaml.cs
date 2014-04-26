@@ -106,7 +106,6 @@ namespace WEditor.Modules.Editor.Controls
         private PointF _lastPanningPos;
         private bool _panning;
 
-        private float ScalerSize { get { return 5/_camera.Zoom; } }
         private bool _scaling;
 
         #endregion
@@ -121,6 +120,11 @@ namespace WEditor.Modules.Editor.Controls
         #endregion
 
         #region Properties
+
+        private float ScalerSize
+        {
+            get { return 5/_camera.Zoom; }
+        }
 
         public Color GlBackground
         {
@@ -194,7 +198,7 @@ namespace WEditor.Modules.Editor.Controls
             if (World == null)
                 return;
             GL.LineWidth(2f);
-            foreach (var layer in World.Layers.Where(l=>l.Visible).Reverse())
+            foreach (var layer in World.Layers.Where(l => l.Visible).Reverse())
             {
                 foreach (var obj in layer.Objects.Reverse())
                 {
@@ -220,29 +224,29 @@ namespace WEditor.Modules.Editor.Controls
                         if (asset != null)
                         {
                             var rotation = 0f;
-                            if (asset.Orientation == Orientation.East) 
-                                rotation = -(float)Math.PI / 2;
+                            if (asset.Orientation == Orientation.East)
+                                rotation = -(float) Math.PI/2;
                             if (asset.Orientation == Orientation.West)
-                                rotation = (float)Math.PI / 2;
+                                rotation = (float) Math.PI/2;
                             if (asset.Orientation == Orientation.South)
-                                rotation = (float)Math.PI;
+                                rotation = (float) Math.PI;
 
-                            if(asset.ImageMode == ImageMode.Wrap)
+                            var tex = GetTexture(asset.Resource);
+                            if (asset.ImageMode == ImageMode.Wrap)
                                 DrawingUtilities.DrawTexture(
                                     new PointF(left, top),
-                                    GetTexture(asset.Resource),
+                                    tex,
                                     ed.Width, ed.Height,
                                     rotation,
                                     texColor);
                             else
                             {
-                                var tex = GetTexture(asset.Resource);
                                 DrawingUtilities.DrawTiledTexture(
                                     new PointF(left, top),
                                     tex,
                                     ed.Width, ed.Height,
-                                    ed.Width / (tex.Width * asset.ScaleX),
-                                    ed.Height / (tex.Height * asset.ScaleY),
+                                    ed.Width/(tex.Width*asset.ScaleX),
+                                    ed.Height/(tex.Height*asset.ScaleY),
                                     rotation,
                                     texColor);
                             }
@@ -251,8 +255,8 @@ namespace WEditor.Modules.Editor.Controls
                         if (obj == SelectedObject)
                         {
                             DrawingUtilities.DrawRect(right - ScalerSize, right + ScalerSize, bottom - ScalerSize, bottom + ScalerSize, _selectionColor, PolygonMode.Fill);
-                            DrawingUtilities.DrawString(_font, new PointF(left + 1 / _camera.Zoom, top + 1 / _camera.Zoom), 0.5f / _camera.Zoom, obj.Name, Colors.Black);
-                            DrawingUtilities.DrawString(_font, new PointF(left, top), 0.5f / _camera.Zoom, obj.Name, Colors.White);
+                            DrawingUtilities.DrawString(_font, new PointF(left + 1/_camera.Zoom, top + 1/_camera.Zoom), 0.5f/_camera.Zoom, obj.Name, Colors.Black);
+                            DrawingUtilities.DrawString(_font, new PointF(left, top), 0.5f/_camera.Zoom, obj.Name, Colors.White);
                         }
                     }
                 }
@@ -269,6 +273,9 @@ namespace WEditor.Modules.Editor.Controls
 
         private TextureInfo GetTexture(string resource)
         {
+            if (resource == null || ResourcesPath == null)
+                return _textures["Default"];
+
             if (_textures.ContainsKey(resource))
                 return _textures[resource];
 
