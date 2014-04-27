@@ -115,7 +115,7 @@ namespace WEditor.Modules.Startup
 
         private IEnumerable<IResult> SaveAsFile()
         {
-            var dialog = new SaveFileDialog {DefaultExt = _projectService.DefaultExt, AddExtension = true, Filter = "Json Files | *.json"};
+            var dialog = new SaveFileDialog {DefaultExt = _projectService.DefaultExt, AddExtension = true, Filter = "Json Files | *.json| Xna Content XML | *.xml"};
             yield return Show.Dialog(dialog);
             yield return _projectService.Save(dialog.FileName);
         }

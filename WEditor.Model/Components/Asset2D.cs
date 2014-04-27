@@ -39,8 +39,8 @@ namespace Models.Components
 
         public Asset2D()
         {
-            ScaleX = 50/8f;
-            ScaleY = 50/8f;
+            ScaleX = 1;
+            ScaleY = 1;
             ImageMode = ImageMode.Tile;
             Orientation = Orientation.North;
         }

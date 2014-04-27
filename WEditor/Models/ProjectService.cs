@@ -104,6 +104,13 @@ namespace WEditor.Models
 
         public IResult Save(string path)
         {
+            var extension = Path.GetExtension(path);
+            if (extension != null && extension.Contains("xml"))
+            {
+                File.WriteAllText(path, Utilities.XnaProjectSerializer.Serialize(_project));
+                return new LambdaResult(delegate { Debug.WriteLine("Saved to xna"); });
+            }
+
             var fi = new FileInfo(path);
             CurrentProjectFileName = fi.Name;
             CurrentProjectFolder = fi.DirectoryName + "\\";

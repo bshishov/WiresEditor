@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Caliburn.Micro;
 using Gemini.Framework;
@@ -32,6 +33,9 @@ namespace WEditor.Modules.Editor.ViewModels
         private ObjectIntance _selectedObject;
 
         private World _world;
+
+        private bool _parallaxMode = false;
+        private bool _showBorders = true;
 
         #endregion
 
@@ -92,6 +96,25 @@ namespace WEditor.Modules.Editor.ViewModels
             {
                 _world = value;
                 NotifyOfPropertyChange(() => CurrentWorld);
+            }
+        }
+
+        public bool ShowBorders
+        {
+            get { return _showBorders; }
+            set
+            {
+                _showBorders = value;
+                NotifyOfPropertyChange(()=>ShowBorders);
+            }
+        }
+        public bool ParallaxMode
+        {
+            get { return _parallaxMode; }
+            set
+            {
+                _parallaxMode = value;
+                NotifyOfPropertyChange(() => ParallaxMode);
             }
         }
 

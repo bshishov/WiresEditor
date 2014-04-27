@@ -178,6 +178,7 @@
     <Compile Include="Utilities\SpriteFont.cs" />
     <Compile Include="Utilities\StartupArgs.cs" />
     <Compile Include="Utilities\TextureInfo.cs" />
+    <Compile Include="Utilities\XNAProjectSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modules\Editor\Views\GLView.xaml.cs">

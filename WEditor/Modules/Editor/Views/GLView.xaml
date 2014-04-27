@@ -11,6 +11,8 @@
     d:DesignWidth="300">
     <controls:GlViewer
         d:IsHidden="true"
+        ParallaxMode="{Binding ParallaxMode, FallbackValue=false}"
+        ShowBorders="{Binding ShowBorders, FallbackValue=true}"
         ResourcesPath="{Binding ResourcesPath, FallbackValue=Resources}"
         GlBackground="{Binding Background, FallbackValue=Gray, Mode=OneWay}"
         GridSize="{Binding GridSize, FallbackValue=16, Mode=OneWay}"

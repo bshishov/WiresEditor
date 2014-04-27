@@ -2,6 +2,10 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Windows;
+using System.Windows.Media.Media3D;
+using Newtonsoft.Json;
+using OpenTK;
 using WEditor.ComponentLibBase;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -15,34 +19,31 @@ namespace Models.Components
     {
         #region Constructors
 
+        private Point3D _pos;
+        private Point3D _rot;
+        private Point3D _scale;
         public Transform()
         {
-            ScaleX = 1;
-            ScaleY = 1;
+            Scale = new Point3D(1, 1, 1);
         }
 
         #endregion
 
         #region Properties
 
-        [PropertyOrder(0)]
-        [Category("Position")]
-        public float X { get; set; }
+        public Point3D Position { get { return _pos; } set { _pos = value; } }
 
-        [PropertyOrder(1)]
-        [Category("Position")]
-        public float Y { get; set; }
+        public Point3D Rotation { get { return _rot; } set { _rot = value; } }
 
-        [PropertyOrder(2)]
-        [Category("Scale")]
-        [DisplayName("Scale X")]
-        public float ScaleX { get; set; }
+        public Point3D Scale { get { return _scale; } set { _scale = value; } }
 
-        [PropertyOrder(3)]
-        [Category("Scale")]
-        [DisplayName("Scale Y")]
-        public float ScaleY { get; set; }
-
+        [JsonIgnore]
+        public float X { get { return (float)Position.X; } set { _pos.X = value; } }
+        [JsonIgnore]
+        public float Y { get { return (float)Position.Y; } set { _pos.Y = value; } }
+        [JsonIgnore]
+        public float Z { get { return (float)Position.Z; } set { _scale.Z = value; } }
+        
         #endregion
 
         #region Methods

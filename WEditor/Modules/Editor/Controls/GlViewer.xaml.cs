@@ -90,6 +90,10 @@ namespace WEditor.Modules.Editor.Controls
 
         public static readonly DependencyProperty ResourcesPathProperty = DependencyProperty.Register("ResourcesPath", typeof (string), typeof (GlViewer));
 
+        public static readonly DependencyProperty ParallaxModeProperty = DependencyProperty.Register("ParallaxMode", typeof(bool), typeof(GlViewer));
+
+        public static readonly DependencyProperty ShowBordersProperty = DependencyProperty.Register("ShowBorders", typeof(bool), typeof(GlViewer));
+
         #endregion
 
         #region Fields
@@ -107,6 +111,7 @@ namespace WEditor.Modules.Editor.Controls
         private bool _panning;
 
         private bool _scaling;
+        private float _parallaxAmout = 0.001f;
 
         #endregion
 
@@ -148,6 +153,18 @@ namespace WEditor.Modules.Editor.Controls
         {
             get { return (World) GetValue(WorldProperty); }
             set { SetValue(WorldProperty, value); }
+        }
+
+        public bool ShowBorders
+        {
+            get { return (bool)GetValue(ShowBordersProperty); }
+            set { SetValue(ShowBordersProperty, value); }
+        }
+
+        public bool ParallaxMode
+        {
+            get { return (bool)GetValue(ParallaxModeProperty); }
+            set { SetValue(ParallaxModeProperty, value); }
         }
 
         public string ResourcesPath
@@ -211,14 +228,22 @@ namespace WEditor.Modules.Editor.Controls
                         var texColor = obj == SelectedObject ? _selectionColor : Colors.White;
                         var top = transform.Y;
                         var left = transform.X;
-                        var right = transform.X + ed.Width;
-                        var bottom = transform.Y + ed.Height;
+                        if (ParallaxMode)
+                        {
+                            left += _parallaxAmout * transform.Z * _camera.X;
+                            top += _parallaxAmout * transform.Z * _camera.Y;
+                        }
+                        var right = left + ed.Width;
+                        var bottom = top + ed.Height;
 
-                        rectcolor.ScA = 0.5f;
-                        DrawingUtilities.DrawRect(left, right, top, bottom, rectcolor, PolygonMode.Fill);
+                        if (ShowBorders)
+                        {
+                            rectcolor.ScA = 0.5f;
+                            DrawingUtilities.DrawRect(left, right, top, bottom, rectcolor, PolygonMode.Fill);
 
-                        rectcolor.ScA = 1f;
-                        DrawingUtilities.DrawRect(left, right, top, bottom, rectcolor, PolygonMode.Line);
+                            rectcolor.ScA = 1f;
+                            DrawingUtilities.DrawRect(left, right, top, bottom, rectcolor, PolygonMode.Line);
+                        }
 
                         var asset = obj.GetComponent<Asset2D>();
                         if (asset != null)
@@ -230,6 +255,8 @@ namespace WEditor.Modules.Editor.Controls
                                 rotation = (float) Math.PI/2;
                             if (asset.Orientation == Orientation.South)
                                 rotation = (float) Math.PI;
+
+                            rotation += (float)transform.Rotation.Z;
 
                             var tex = GetTexture(asset.Resource);
                             if (asset.ImageMode == ImageMode.Wrap)
