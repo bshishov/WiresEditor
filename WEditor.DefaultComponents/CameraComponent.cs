@@ -7,10 +7,10 @@ namespace WEditor.DefaultComponents
     [ExportMetadata("Type", typeof(CameraComponent))]
     class CameraComponent : IGameComponent
     {
-        public float Zoom;
-        public float LeftBound;
-        public float RightBound;
-        public float TopBound;
-        public float BottomBound;
+        public float Zoom { get; set; }
+        public float LeftBound { get; set; }
+        public float RightBound { get; set; }
+        public float TopBound { get; set; }
+        public float BottomBound { get; set; }
     }
 }

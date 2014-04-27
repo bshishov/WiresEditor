@@ -37,12 +37,19 @@ namespace Models.Components
 
         public Point3D Scale { get { return _scale; } set { _scale = value; } }
 
-        [JsonIgnore]
-        public float X { get { return (float)Position.X; } set { _pos.X = value; } }
-        [JsonIgnore]
-        public float Y { get { return (float)Position.Y; } set { _pos.Y = value; } }
-        [JsonIgnore]
-        public float Z { get { return (float)Position.Z; } set { _scale.Z = value; } }
+        public void SetX(float val)
+        {
+            _pos.X = val;
+        }
+        public void SetY(float val)
+        {
+            _pos.Y = val;
+        }
+        public void SetZ(float val)
+        {
+            _pos.Z = val;
+        }
+
         
         #endregion
 

@@ -74,8 +74,8 @@ namespace Models
 
         public bool Contains(PointF point)
         {
-            return point.X >= Transform.X && (point.X <= Transform.X + EditorInfo.Width) &&
-                   point.Y >= Transform.Y && (point.Y <= Transform.Y + EditorInfo.Height);
+            return point.X >= Transform.Position.X && (point.X <= Transform.Position.X + EditorInfo.Width) &&
+                   point.Y >= Transform.Position.Y && (point.Y <= Transform.Position.Y + EditorInfo.Height);
         }
 
         public T GetComponent<T>()

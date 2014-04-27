@@ -7,6 +7,6 @@ namespace WEditor.DefaultComponents
     [ExportMetadata("Type", typeof(Animation))]
     class Animation : IGameComponent
     {
-        public float FrameTime;
+        public float FrameTime { get; set; }
     }
 }

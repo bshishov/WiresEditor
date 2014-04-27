@@ -226,12 +226,12 @@ namespace WEditor.Modules.Editor.Controls
                     {
                         var rectcolor = obj == SelectedObject ? _selectionColor : ed.ObjectColor;
                         var texColor = obj == SelectedObject ? _selectionColor : Colors.White;
-                        var top = transform.Y;
-                        var left = transform.X;
+                        var top = (float)transform.Position.Y;
+                        var left = (float)transform.Position.X;
                         if (ParallaxMode)
                         {
-                            left += _parallaxAmout * transform.Z * _camera.X;
-                            top += _parallaxAmout * transform.Z * _camera.Y;
+                            left += _parallaxAmout * (float)transform.Position.Z * _camera.X;
+                            top += _parallaxAmout * (float)transform.Position.Z * _camera.Y;
                         }
                         var right = left + ed.Width;
                         var bottom = top + ed.Height;
@@ -455,13 +455,13 @@ namespace WEditor.Modules.Editor.Controls
                 var pos = ToWorld(e.X, e.Y);
                 if (SelectedObject.EditorInfo.SnapToGrid)
                 {
-                    SelectedObject.EditorInfo.Width = Math.Max(0, MathUtilities.Snap(pos.X - SelectedObject.Transform.X, GridSize));
-                    SelectedObject.EditorInfo.Height = Math.Max(0, MathUtilities.Snap(pos.Y - SelectedObject.Transform.Y, GridSize));
+                    SelectedObject.EditorInfo.Width = Math.Max(0, MathUtilities.Snap(pos.X - (float)SelectedObject.Transform.Position.X, GridSize));
+                    SelectedObject.EditorInfo.Height = Math.Max(0, MathUtilities.Snap(pos.Y - (float)SelectedObject.Transform.Position.Y, GridSize));
                 }
                 else
                 {
-                    SelectedObject.EditorInfo.Width = Math.Max(0, pos.X - SelectedObject.Transform.X);
-                    SelectedObject.EditorInfo.Height = Math.Max(0, pos.Y - SelectedObject.Transform.Y);
+                    SelectedObject.EditorInfo.Width = Math.Max(0, pos.X - (float)SelectedObject.Transform.Position.X);
+                    SelectedObject.EditorInfo.Height = Math.Max(0, pos.Y - (float)SelectedObject.Transform.Position.Y);
                 }
             }
             else if (_dragging)
@@ -470,13 +470,13 @@ namespace WEditor.Modules.Editor.Controls
 
                 if (SelectedObject.EditorInfo.SnapToGrid)
                 {
-                    SelectedObject.Transform.X = MathUtilities.Snap(pos.X + _dragOffset.X, GridSize);
-                    SelectedObject.Transform.Y = MathUtilities.Snap(pos.Y + _dragOffset.Y, GridSize);
+                    SelectedObject.Transform.SetX(MathUtilities.Snap(pos.X + _dragOffset.X, GridSize));
+                    SelectedObject.Transform.SetY(MathUtilities.Snap(pos.Y + _dragOffset.Y, GridSize));
                 }
                 else
                 {
-                    SelectedObject.Transform.X = pos.X + _dragOffset.X;
-                    SelectedObject.Transform.Y = pos.Y + _dragOffset.Y;
+                    SelectedObject.Transform.SetX(pos.X + _dragOffset.X);
+                    SelectedObject.Transform.SetY(pos.Y + _dragOffset.Y);
                 }
             }
             GlPaint(this, null);
@@ -496,8 +496,8 @@ namespace WEditor.Modules.Editor.Controls
                 SelectedObject.EditorInfo != null)
             {
                 var pos = ToWorld(e.X, e.Y);
-                var right = SelectedObject.Transform.X + SelectedObject.EditorInfo.Width;
-                var bottom = SelectedObject.Transform.Y + SelectedObject.EditorInfo.Height;
+                var right = SelectedObject.Transform.Position.X + SelectedObject.EditorInfo.Width;
+                var bottom = SelectedObject.Transform.Position.Y + SelectedObject.EditorInfo.Height;
                 if (pos.X >= right - ScalerSize &&
                     pos.Y >= bottom - ScalerSize &&
                     pos.X <= right + ScalerSize &&
@@ -505,7 +505,7 @@ namespace WEditor.Modules.Editor.Controls
                     _scaling = true;
                 else if (SelectedObject.Contains(pos))
                 {
-                    _dragOffset = new PointF(SelectedObject.Transform.X - pos.X, SelectedObject.Transform.Y - pos.Y);
+                    _dragOffset = new PointF((float)SelectedObject.Transform.Position.X - pos.X, (float)SelectedObject.Transform.Position.Y - pos.Y);
                     _dragging = true;
                 }
             }

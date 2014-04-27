@@ -169,13 +169,13 @@ namespace WEditor.Modules.Editor.ViewModels
                 var newObject = ObjectIntance.CreateEditorDefault(layer.DefaultStyle);
                 if (newObject.EditorInfo.SnapToGrid)
                 {
-                    newObject.Transform.X = MathUtilities.Snap(a.Position.X, GridSize);
-                    newObject.Transform.Y = MathUtilities.Snap(a.Position.Y, GridSize);
+                    newObject.Transform.SetX(MathUtilities.Snap(a.Position.X, GridSize));
+                    newObject.Transform.SetY(MathUtilities.Snap(a.Position.Y, GridSize));
                 }
                 else
                 {
-                    newObject.Transform.X = a.Position.X;
-                    newObject.Transform.Y = a.Position.Y;
+                    newObject.Transform.SetX(a.Position.X);
+                    newObject.Transform.SetY(a.Position.Y);
                 }
                 layer.Objects.Add(newObject);
                 SelectedObject = newObject;
