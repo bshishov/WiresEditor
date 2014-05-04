@@ -56,6 +56,7 @@
     <Compile Include="Components\EditorInfo.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Layer.cs" />
+    <Compile Include="ObjectCloner.cs" />
     <Compile Include="ObjectIntance.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\Annotations.cs" />

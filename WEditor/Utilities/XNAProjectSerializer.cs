@@ -64,6 +64,7 @@ namespace WEditor.Utilities
 
                             foreach (var prop in component.GetType().GetProperties())
                             {
+                                if(prop.Name == "IsNotifying") continue;
                                 var val = prop.GetValue(component, null) ?? "Null";
                                 sb.Append(Indent(10) + XmlValue(prop.Name, val.ToString()) + "\n");
                             }

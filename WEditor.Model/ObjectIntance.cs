@@ -1,12 +1,16 @@
 #region
 
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
 using Caliburn.Micro;
 using Models.Components;
 using Newtonsoft.Json;
+using OpenTK.Platform;
 using WEditor.ComponentLibBase;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -17,7 +21,8 @@ namespace Models
     /// <summary>
     ///     The game object instance in the World
     /// </summary>
-    public class ObjectIntance : PropertyChangedBase
+    [Serializable]
+    public class ObjectIntance : PropertyChangedBase, ICloneable
     {
         #region Fields
 
@@ -98,6 +103,23 @@ namespace Models
         public override string ToString()
         {
             return string.Format("Object: {0}", Name);
+        }
+
+        public object Clone()
+        {
+            var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
+            });
+
+            var obj = JsonConvert.DeserializeObject<ObjectIntance>(str, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
+            });
+
+            return obj;
         }
 
         #endregion

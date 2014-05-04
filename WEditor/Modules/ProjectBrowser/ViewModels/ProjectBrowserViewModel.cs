@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
@@ -25,6 +26,7 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
         #region Fields
 
         private object _selected;
+        private ObjectIntance _clipBoard;
 
         #endregion
 
@@ -252,19 +254,43 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             layer.Objects.Add(ObjectIntance.CreateEditorDefault(layer.DefaultStyle));
         }
 
-        public void OnMoveLayer(object item, bool up)
+        public void OnMoveLayerUp(object item)
         {
             var layer = item as Layer;
             if (layer == null) return;
             var world = GetParentFor(layer, Projects.First());
             if (world == null) return;
-            var index = world.Layers.IndexOf(layer);
-            index += up ? -1 : +1;
-            index = Math.Max(0, index);
-            index = Math.Min(0, world.Layers.Count - 1);
 
-            world.Layers.Remove(layer);
-            world.Layers.Insert(index, layer);
+            var last = world.Layers.IndexOf(layer);
+            world.Layers.Move(last, Math.Max(0, last - 1));
+            Console.WriteLine(world.Layers.Select(w => w.Name));
+        }
+
+        public void OnMoveLayerDown(object item)
+        {
+            var layer = item as Layer;
+            if (layer == null) return;
+            var world = GetParentFor(layer, Projects.First());
+            if (world == null) return;
+
+            var last = world.Layers.IndexOf(layer);
+            world.Layers.Move(last, Math.Min(last + 1, world.Layers.Count - 1));
+            Console.WriteLine(world.Layers.Select(w => w.Name));
+        }
+
+        public void OnPasteObject(object item)
+        {
+            var layer = item as Layer;
+            if (layer == null) return;
+            var world = GetParentFor(layer, Projects.First());
+            if (world == null) return;
+
+            if (_clipBoard != null)
+            {
+                var obj = _clipBoard.Clone() as ObjectIntance;
+                if(obj != null)
+                    layer.Objects.Add(obj);
+            }
         }
 
         #endregion
@@ -282,6 +308,15 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
                 doc.SelectedObject = obj;
         }
 
+        public void OnCopyObject(object item)
+        {
+            var obj = item as ObjectIntance;
+            if (obj == null)
+                return;
+
+            _clipBoard = obj.Clone() as ObjectIntance;
+        }
+
         public void OnDeleteObject(object item)
         {
             var obj = item as ObjectIntance;
@@ -290,6 +325,30 @@ namespace WEditor.Modules.ProjectBrowser.ViewModels
             var layer = GetParentFor(obj, Projects.First());
             if (layer != null)
                 layer.Objects.Remove(obj);
+        }
+
+        public void OnMoveObjectUp(object item)
+        {
+            var obj = item as ObjectIntance;
+            if (obj == null) return;
+            var layer = GetParentFor(obj, Projects.First());
+            if (layer == null) return;
+
+            var last = layer.Objects.IndexOf(obj);
+            layer.Objects.Move(last, Math.Max(0, last - 1));
+            Console.WriteLine(layer.Objects.Select(w => w.Name));
+        }
+
+        public void OnMoveObjectDown(object item)
+        {
+            var obj = item as ObjectIntance;
+            if (obj == null) return;
+            var layer = GetParentFor(obj, Projects.First());
+            if (layer == null) return;
+
+            var last = layer.Objects.IndexOf(obj);
+            layer.Objects.Move(last, Math.Min(last + 1, layer.Objects.Count - 1));
+            Console.WriteLine(layer.Objects.Select(w => w.Name));
         }
 
         public void ShowComponents(object item)

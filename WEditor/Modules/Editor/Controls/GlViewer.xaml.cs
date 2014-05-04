@@ -225,7 +225,6 @@ namespace WEditor.Modules.Editor.Controls
                     if (transform != null && ed != null && ed.Visible)
                     {
                         var rectcolor = obj == SelectedObject ? _selectionColor : ed.ObjectColor;
-                        var texColor = obj == SelectedObject ? _selectionColor : Colors.White;
                         var top = (float)transform.Position.Y;
                         var left = (float)transform.Position.X;
                         if (ParallaxMode)
@@ -248,6 +247,7 @@ namespace WEditor.Modules.Editor.Controls
                         var asset = obj.GetComponent<Asset2D>();
                         if (asset != null)
                         {
+                            var texColor = obj == SelectedObject ? _selectionColor : asset.Color;
                             var rotation = 0f;
                             if (asset.Orientation == Orientation.East)
                                 rotation = -(float) Math.PI/2;
@@ -450,9 +450,9 @@ namespace WEditor.Modules.Editor.Controls
 
                 _lastPanningPos = e.Location;
             }
+            var pos = ToWorld(e.X, e.Y);
             if (_scaling)
             {
-                var pos = ToWorld(e.X, e.Y);
                 if (SelectedObject.EditorInfo.SnapToGrid)
                 {
                     SelectedObject.EditorInfo.Width = Math.Max(0, MathUtilities.Snap(pos.X - (float)SelectedObject.Transform.Position.X, GridSize));
@@ -466,8 +466,6 @@ namespace WEditor.Modules.Editor.Controls
             }
             else if (_dragging)
             {
-                var pos = ToWorld(e.X, e.Y);
-
                 if (SelectedObject.EditorInfo.SnapToGrid)
                 {
                     SelectedObject.Transform.SetX(MathUtilities.Snap(pos.X + _dragOffset.X, GridSize));
@@ -479,6 +477,8 @@ namespace WEditor.Modules.Editor.Controls
                     SelectedObject.Transform.SetY(pos.Y + _dragOffset.Y);
                 }
             }
+
+            PositionLabel.Content = String.Format("X:{0:F} Y:{1:F}", pos.X, pos.Y);
             GlPaint(this, null);
         }
 
@@ -539,6 +539,8 @@ namespace WEditor.Modules.Editor.Controls
                 _camera.X -= (mx - _camera.X)*(_camera.ZoomRatio - 1)/_camera.ZoomRatio;
                 _camera.Y -= (my - _camera.Y)*(_camera.ZoomRatio - 1)/_camera.ZoomRatio;
             }
+
+            ZoomLabel.Content = String.Format("{0:F}%", _camera.Zoom * 100);
             GlPaint(this, null);
         }
 

@@ -175,6 +175,7 @@
     <Compile Include="Utilities\DrawingUtilities.cs" />
     <Compile Include="Utilities\IStartupArgs.cs" />
     <Compile Include="Utilities\MathUtilities.cs" />
+    <Compile Include="Utilities\ObjectCloner.cs" />
     <Compile Include="Utilities\SpriteFont.cs" />
     <Compile Include="Utilities\StartupArgs.cs" />
     <Compile Include="Utilities\TextureInfo.cs" />
@@ -343,8 +344,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\PasteHS.png" />
     <Resource Include="Resources\FillDownHS.png" />
     <Resource Include="Resources\FillUpHS.png" />
+    <Resource Include="Resources\CopyHS.png" />
     <Content Include="Resources\no-asset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

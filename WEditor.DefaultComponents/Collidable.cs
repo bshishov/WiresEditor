@@ -42,6 +42,10 @@ namespace WEditor.DefaultComponents
         [Description("Scale along Y axis relative to object size")]
         public float ScaleY { get; set; }
 
+        [Category("Main")]
+        [Description("Is sensor means tha it will emit OnCollision message but it's not physically stops the other bodies")]
+        public bool IsSensor { get; set; }
+
         #endregion
 
         #region Methods

@@ -8,9 +8,9 @@ namespace WEditor.DefaultComponents
     class CameraComponent : IGameComponent
     {
         public float Zoom { get; set; }
-        public float LeftBound { get; set; }
-        public float RightBound { get; set; }
-        public float TopBound { get; set; }
-        public float BottomBound { get; set; }
+        public CameraComponent()
+        {
+            Zoom = 1f;
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace WEditor.DefaultComponents
     class Animation : IGameComponent
     {
         public float FrameTime { get; set; }
+        public int Frames { get; set; }
+        public bool Repeat { get; set; }
     }
 }

@@ -2,9 +2,12 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Drawing;
+using System.Windows.Media;
 using Caliburn.Micro;
 using WEditor.ComponentLibBase;
 using WEditor.CustomEditors;
+using Color = System.Windows.Media.Color;
 
 #endregion
 
@@ -43,6 +46,8 @@ namespace Models.Components
             ScaleY = 1;
             ImageMode = ImageMode.Tile;
             Orientation = Orientation.North;
+            ZIndex = 0;
+            Color = Color.FromArgb(255, 255, 255, 255);
         }
 
         #endregion
@@ -68,6 +73,10 @@ namespace Models.Components
         public float ScaleX { get; set; }
 
         public float ScaleY { get; set; }
+
+        public float ZIndex { get; set; }
+
+        public Color Color { get; set; }
 
         #endregion
 

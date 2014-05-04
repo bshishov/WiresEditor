@@ -5,6 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <WindowsFormsHost x:Name="WinFormsHost" SizeChanged="WinFormsHost_SizeChanged" Loaded="WinFormsHost_Loaded"
-                      Background="White" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <WindowsFormsHost x:Name="WinFormsHost" SizeChanged="WinFormsHost_SizeChanged" Loaded="WinFormsHost_Loaded" Background="White" Grid.Row="0" />
+        <StackPanel Height="auto" Grid.Row="1" Orientation="Horizontal" Background="Wheat">
+            <Label x:Name="ZoomLabel" Content="100%"></Label>
+            <Separator Width="12" RenderTransformOrigin="0.5,0.5" >
+                <Separator.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Separator.RenderTransform>
+            </Separator>
+            <Label x:Name="PositionLabel" Content="0 0"></Label>
+        </StackPanel>
+    </Grid>
+
 </UserControl>

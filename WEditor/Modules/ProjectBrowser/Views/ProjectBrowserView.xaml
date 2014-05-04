@@ -99,15 +99,22 @@
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <MenuItem Header="Move Layer Up"
-                                                          cal:Message.Attach="OnMoveLayer($dataContext,true)">
+                                                          cal:Message.Attach="OnMoveLayerUp($dataContext)">
                                                     <MenuItem.Icon>
                                                         <Image Source="/Resources/FillUpHS.png" Height="16" Width="16" />
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                                 <MenuItem Header="Move Layer Down"
-                                                          cal:Message.Attach="OnMoveLayer($dataContext,false)">
+                                                          cal:Message.Attach="OnMoveLayerDown($dataContext)">
                                                     <MenuItem.Icon>
                                                         <Image Source="/Resources/FillDownHS.png" Height="16"
+                                                               Width="16" />
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Paste Objects"
+                                                          cal:Message.Attach="OnPasteObject($dataContext)">
+                                                    <MenuItem.Icon>
+                                                        <Image Source="/Resources/PasteHS.png" Height="16"
                                                                Width="16" />
                                                     </MenuItem.Icon>
                                                 </MenuItem>
@@ -140,6 +147,26 @@
                                                 <controls:ProjectBrowserItem.ContextMenu>
                                                     <ContextMenu
                                                         cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                        <MenuItem Header="Move Object Up"
+                                                          cal:Message.Attach="OnMoveObjectUp($dataContext)">
+                                                            <MenuItem.Icon>
+                                                                <Image Source="/Resources/FillUpHS.png" Height="16" Width="16" />
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
+                                                        <MenuItem Header="Move Object Down"
+                                                          cal:Message.Attach="OnMoveObjectDown($dataContext)">
+                                                            <MenuItem.Icon>
+                                                                <Image Source="/Resources/FillDownHS.png" Height="16"
+                                                               Width="16" />
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
+                                                        <MenuItem Header="Copy"
+                                                          cal:Message.Attach="OnCopyObject($dataContext)">
+                                                            <MenuItem.Icon>
+                                                                <Image Source="/Resources/CopyHS.png" Height="16"
+                                                               Width="16" />
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
                                                         <MenuItem Header="Edit Components"
                                                                   cal:Message.Attach="ShowComponents($dataContext)">
                                                             <MenuItem.Icon>
